@@ -1,0 +1,154 @@
+
+{% extends "material/base.html" %}
+{% block content %}
+<div class="container" style="background-image:url(https://i2.wp.com/karunfreshgrocery.com/wp-content/uploads/2018/10/simple-gray-abstract-background-wi-1920x1080.jpg?ssl=1); background-size:cover; color:white;">
+
+    <div class="showcase container greay">
+        <div class="row">
+            <div class="col 12 m10 offset-ml center">
+                <h2>Better Profit</h2>
+                <h4>Movie Profit and Loss Predictor</h4>
+                <h5>Supervised Machine Learning</h5>
+                <p>by Ying Li, Neal Zhang, Nick Setnik, and Pam Zhao</p>
+                <br>
+                <a href="{{url_for('index')}}" class="btn btn-small waves-effect waves-dark">Reset</a>
+                <a href="{{url_for('movies_api')}}" class="btn btn-small white black-text waves-effect waves-dark" target="_blank">Movies API</a>
+            </div>
+        </div>
+    </div>
+    <section class="section section-signup">
+        <!-- <div class="container"> -->
+        <div class="row">
+            <div class="col col-4">
+                <div class="card-panel grey lighten-4 grey-text text-darken-4 z-depth-0">
+                    <form action="{{url_for('analyze')}}" method="POST" >
+                
+                        <div class="range-field">
+                            <input type="range" min="0" max="500" step="1" value="0" name="budget">
+                            <label>Budget (million)</label>
+                        </div>
+            
+                        <div class="range-field">
+                            <input type="range" min="0" max="250" step="1" value="0" name="view">
+                            <label>Trailer Youtube Views (million)</label>
+                        </div>
+            
+                        <div class="range-field">
+                            <input type="range" min="0" max="900" step="10" value="0" name="like">
+                            <label>Trailer Youtube Likes (k)</label>
+                        </div>
+            
+                        <div class="range-field">
+                            <input type="range" min="0" max="500" step="10" value="0" name="comment">
+                            <label>Trailer Youtube Comments (k)</label>
+                        </div>
+                        <br>
+                        <input type="submit" value="Predict" class="btn btn-small">
+                        
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="col col-4">
+                <div class="card-panel grey lighten-4 grey-text text-darken-4 z-depth-0">
+                    <p>Budget: {{input_budget}} million</p>
+                    <p>Views: {{input_view}} million</p>
+                    <p>Likes: {{input_like}} thousand</p>
+                    <p>Comments: {{input_comment}} thousand</p>
+                </div>
+            </div>
+
+            <div class="col col-4">
+                <h4>Prediction:</h4>
+                <!-- Result of the prediction here -->
+                <!-- <h5>{{predict}}</h5> -->
+                <div>
+                    {% if predict=="1" %}
+                    <h5 style="color:rgb(127, 247, 75);">The Movie is Profitable</h5>
+                    {% elif predict=="0" %}
+                    <h5 style="color:red">The Movie is NOT Profitable</h5>
+                    {% else %}
+                    
+                    {% endif %}
+                </div>
+
+                <div>
+                    <p>Probability that is not profitable: {{z}}</p>
+                    <p>Probability that is profitable: {{y}}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div>
+        <h4 class="center">Do Youtube trailers influence movie gross?</h4>
+        <!-- <p style="color: #000000; text-align: center;">Select Year: <select id="selDataset" onchange="optionChanged(this.value)"></select></p> -->
+    </div>
+
+    <div class="row">
+        <div class="col s12 m4 offers">
+            <h5>Select Year:</h5>
+            <!-- <select class="initialized"> -->
+            <select onchange="optionChanged(this.value)">
+                <!-- <option value="" disabled="" selected="">Select Year</option> -->
+                <option value="2016">2016</option>
+                <option value="2017">2017</option>
+                <option value="2018">2018</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col s12 m4 offers">
+            <div class="graph-1 center">
+                <div id="scatter1"></div>
+                <div id="r1"></div>
+            </div>
+        </div>
+        <div class="col s12 m4 offers">
+            <div class="graph-2 center">
+                <div id="scatter2"></div>
+                <div id="r2"></div>
+            </div>
+        </div>
+        <div class="col s12 m4 offers">
+            <div class="graph-3 center">
+                <div id="scatter3"></div>
+                <div id="r3"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row center">
+        <a href="https://github.com/nsetnik0703/Netflix-Movie-Predictor" class="btn btn-small waves-effect waves-dark" target="_blank">Github</a>
+    </div>
+    <div class="row"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/css/materialize.min.css" rel="stylesheet"/>
+
+<script>
+    (function($){
+        $(function(){
+            $(document).ready(function() {
+            $('select').material_select();
+            });
+        });
+    })(jQuery);
+</script>
+
+<script src="../static/js/plot.js"></script>
+
+{% endblock %}
+
