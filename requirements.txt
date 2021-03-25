@@ -78,7 +78,7 @@ pylint==2.3.1
 pyrsistent==0.15.2
 python-dateutil==2.7.3
 pytz==2018.5
-PyYAML==5.1.1
+PyYAML==5.4
 pyzmq==18.0.1
 qtconsole==4.5.1
 requests==2.22.0
